@@ -1,8 +1,19 @@
-from conditional import Else
+from conditional import If, Else
 from command_baseclass import MiCufunction_Command
+
+
 
 class Close_Block(MiCufunction_Command):
     can_pop_filename = True
+
+    def start_else(self, stack):
+        if_block = stack.pop()
+        self.text = if_block.end(True)
+        item = Else(if_block)
+        self.text += item.begin()
+
+        stack.append(item)
+
     def __init__(self, stack, line, args) -> None:
         # Xero I am sorry
         self.pop_filename = False
@@ -13,10 +24,13 @@ class Close_Block(MiCufunction_Command):
             if type(item).has_filename:
                 self.pop_filename = True
 
-        elif line == "} else {":
-            if_block = stack.pop()
-            self.text = if_block.end(True)
-            item = Else(if_block)
-            self.text += item.begin()
+            # This makes an else block and then closes it
+            # Because if the condition isn't met, the else block
+            # is responsible for unpausing the parent's timer
+            if type(item) is If:
+                self.start_else(self, stack)
+                item = stack.pop()
+                self.text += item.end()
 
-            stack.append(item)
+        elif line == "} else {":
+            self.start_else(self, stack)
