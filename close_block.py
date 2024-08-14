@@ -20,10 +20,6 @@ class Close_Block(MiCufunction_Command):
         assert args == ["}"] or args == ["}","else","{"], "Incorrect usage of }"
         if line == "}":
             item = stack.pop()
-            self.text = item.end()
-            if type(item).has_filename:
-                self.pop_filename = True
-
             # This makes an else block and then closes it
             # Because if the condition isn't met, the else block
             # is responsible for unpausing the parent's timer
@@ -32,6 +28,10 @@ class Close_Block(MiCufunction_Command):
                 self.start_else(stack)
                 item = stack.pop()
                 self.text += item.end()
+            else:
+                self.text = item.end()
+                if type(item).has_filename:
+                    self.pop_filename = True
 
         elif line == "} else {":
             self.start_else(stack)
