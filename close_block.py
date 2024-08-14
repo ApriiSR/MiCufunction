@@ -28,6 +28,7 @@ class Close_Block(MiCufunction_Command):
             # Because if the condition isn't met, the else block
             # is responsible for unpausing the parent's timer
             if type(item) is If:
+                stack.append(item)
                 self.start_else(stack)
                 item = stack.pop()
                 self.text += item.end()
