@@ -4,9 +4,13 @@ from typing import Union
 import re
 from math import atan2, degrees, sqrt
 
+# "function" since MC 1.21; "functions" before. Set from the source file's own
+# path in MiCufunction.py so output matches whichever era the datapack uses.
+FUNCTION_DIR = "function"
+
 def get_filename(function_name) -> str:
         address = re.split(r'[:/]', function_name)
-        address.insert(1, "functions")
+        address.insert(1, FUNCTION_DIR)
         address[-1] += ".mcfunction"
         address = "/".join(address)
         return "data/" + address

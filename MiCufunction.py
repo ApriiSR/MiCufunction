@@ -68,11 +68,13 @@ class Program:
 
 
 def get_default_function_name(filename):
+    import utils
     split = filename.split("/")
     namespace_index = -1
     for i in range(len(split)):
-        if split[i] == "functions":
+        if split[i] in ("function", "functions"):
             namespace_index = i - 1
+            utils.FUNCTION_DIR = split[i]
             break
     assert namespace_index >= 0, "No file name provided, and unable to make a default name by looking at .micufunction file's location in datapack"
     unsplit = split[namespace_index] + ":" + "/".join(split[namespace_index+2:])
